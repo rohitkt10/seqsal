@@ -132,8 +132,13 @@ class VariationalAutoEncoder(nn.Module):
             1. L   <int> - Length of sequence.
             2. A   <int> - Size of vocabulary.
             3. encoder_units <tuple/list> - Sizes of hidden layers in the encoder network.
-            4. decoder_units <tuple/list> - Sizes of hidden lauers in the decoder network.
-            5. rank <int> - Size of the encoding.
+            4. encoder_actfn <torch.nn.Module> - The activation function to be used in 
+                                                 the encoder network.
+            5. decoder_units <tuple/list> - Sizes of hidden lauers in the decoder network.
+            6. decoder_actfn <torch.nn.Module> - The activation function to be used in 
+                                                  the decoder network. 
+            7. rank <int> - Size of the encoding.
+            8. drop <float> The dropout probability. 
         """
         super(VariationalAutoEncoder, self).__init__()
         self.rank = rank
@@ -190,8 +195,10 @@ class VariationalAutoEncoder(nn.Module):
     def forward(self, x):
         """
         Given a min-batch of data-samples, return the:
-            1. approximate posterior distribution of the latent variables.
-            2. conditional distribution of the reconstruction conditional on the sampled latent variable.
+        	1. sample drawn from the approximate latent posterior (torch.tensor).
+            2. the approximate posterior (torch.distributions.Distribution).
+            3. conditional distribution of the reconstruction conditional 
+               on the sampled latent variable (torch.distributions.Distribution).
         
         For simplicity we will decode with 1 sample from the latent posterior following the same 
         procedure as Kingma & Welling (2014). 
@@ -263,8 +270,8 @@ class VariationalAutoEncoder(nn.Module):
         2. x | z \\sim p(x|z) = Cat( x | decoder(z) )
         """
         # make sure to take the model to eval mode 
-        if vae.training:
-            vae.eval()
+        if self.training:
+            self.eval()
         
         if num_samples == 1:
             zsample = self.zprior.sample()
