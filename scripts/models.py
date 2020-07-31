@@ -3,8 +3,30 @@ from torch import nn
 
 __all__ = ['NeuralNetwork', 'LinearAutoEncoder', 'VariationalAutoEncoder', 'LpRegularizer', 'Reshape']
 
+
+class MaskedAutoEncoder(nn.Module):
+	"""
+	An implementation of the masked astoencoder proposed in Germain et al (2015) [1] 
+	to model joint distributions as product of conditionals. 
+
+	REFERENCE:
+		[1] - Masked Autoencoder for Distribution Estimation, Germain et al, 2015
+			  https://arxiv.org/pdf/1502.03509.pdf
+	"""
+	def __init__(self, input_dim, Hs):
+		"""
+		INPUTS:
+			1. input_dim <int> - The size of the inputs. 
+			2. Hs <list/tuple> - The sizes of the hidden layers. 
+		"""
+		super(MaskedAutoEncoder, self).__init__()
+		self.input_dim = input_dim
+		self.output_dim = input_dim
+		self.Hs = Hs
+
+
 class NeuralNetwork(nn.Module):
-	def __init__(self, Hs, actn=nn.ReLU(), lastlayeractfn=nn.Identity()):
+	def __init__(self, Hs, actfn=nn.ReLU(), lastlayeractfn=nn.Identity()):
 		"""
 		Hs <list/tuple>: The size of the input, hidden layers and output. For example, 
 						 for a NN with input size 3, output size 2, and 2 hidden layers 
