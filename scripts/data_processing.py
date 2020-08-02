@@ -37,6 +37,3 @@ class ProteinMSADataset(torch.utils.data.Dataset):
 		xs = self.Xonehot[idx]
 		ws = self.W[idx]
 		return xs, ws
-
-def
-

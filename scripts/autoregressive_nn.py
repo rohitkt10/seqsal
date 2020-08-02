@@ -172,6 +172,3 @@ def test_made_implementation():
 		print('MADE implementation passed tests.')
 	else:
 		print('MADE implementation did not pass tests')
-
-
-
