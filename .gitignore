@@ -1,0 +1,5 @@
+./notebooks/*_results/
+*.cf
+*.a3m
+*.pdb
+./notebooks/test.ipynb
