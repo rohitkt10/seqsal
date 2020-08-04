@@ -3,3 +3,5 @@
 *.a3m
 *.pdb
 ./notebooks/test.ipynb
+./seqsal.ipynb
+./data/

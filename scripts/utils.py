@@ -1,6 +1,7 @@
 import numpy as np, os
 import scipy
-from scipy import squareform, pdist
+from scipy.spatial.distance import pdist, squareform
+
 
 def get_eff(msa, eff_cutoff=0.8):
     """
@@ -13,7 +14,7 @@ def get_eff(msa, eff_cutoff=0.8):
     if msa.ndim == 3: msa = msa.argmax(-1)
     msa_sm = 1.0 - squareform(pdist(msa,"hamming"))
     msa_weights = 1/(msa_sm >= eff_cutoff).astype(np.float).sum(-1)
-    return msa_w
+    return msa_weights
 
 def pw_saliency(model):
     """

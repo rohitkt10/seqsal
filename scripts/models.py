@@ -39,26 +39,28 @@ class NeuralNetwork(nn.Module):
 		return y
 
 class LpRegularizer(nn.modules.loss._Loss):
-	def __init__(self, p=2, dtype=torch.float32):
-		"""
-		Compute the p-norm regularizer for all 
-		parameters in a nn.Module object.  
+    def __init__(self, p=2, lmbda=1., dtype=torch.float32):
+        """
+        Compute the p-norm regularizer for all 
+        parameters in a nn.Module object.  
 
-		||W||_p = (\\sum_i \\abs W_{i}^{p})^{1/p}
+        ||W||_p = (\\sum_i \\abs W_{i}^{p})^{1/p}
 
-		INPUTS:
-			p <int> - The norm order. 
-		
-		"""
-		self.p=p
-		self.dtype = dtype
+        INPUTS:
+            p <int> - The norm order. 
+        
+        """
+        super(LpRegularizer, self).__init__()
+        self.p = p
+        self.lmbda = lmbda
+        self.dtype = dtype
+    def forward(self, module):
+        loss = torch.tensor(0., dtype=self.dtype)
+        for m in module.modules():
+            if hasattr(m, 'weight'):
+                loss += m.weight.norm(p=self.p)
+        return self.lmbda * loss
 
-	def forward(module):
-		loss = torch.tensor(0., dtype=self.dtype)
-		for m in module.modules():
-			if hasattr(m, 'weight'):
-				loss += m.weight.norm(p=self.p)
-		return loss
 
 class Reshape(nn.Module):
 	def __init__(self, target_shape):
