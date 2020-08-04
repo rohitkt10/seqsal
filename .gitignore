@@ -5,3 +5,4 @@
 ./notebooks/test.ipynb
 ./seqsal.ipynb
 ./data/
+./scripts/training.py
